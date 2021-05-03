@@ -14,8 +14,9 @@ const frameCost = frames.reduce((z,x) => { z[x.id] = x.cost; return z; }, {});
  * @param frameWidth {number} The width of the frame, in millimeters.
  * @param matWidth {number} The width of the mat, in millimeters.
  */
-export function calculatePrice(printSize, frameStyle, frameWidth, matWidth) {
+function calculatePrice(printSize, frameStyle, frameWidth, matWidth) {
   const sizeMultiplier = { 'S': 1, 'M': 2, 'L': 3 };
   return (3000 + frameCost[frameStyle] * frameWidth + 5 * matWidth) * sizeMultiplier[printSize];
-
 }
+
+module.exports = { calculatePrice }
