@@ -4,6 +4,8 @@
 
 'use strict';
 
+import {Artwork} from '../artwork.js';
+
 const express = require('express');
 const routes = express.Router();
 const fetch = require('node-fetch');
@@ -21,8 +23,17 @@ async function getArtwork(id) {
   if (!obj || !obj.objectID) {
     return null;
   }
-  // TODO: convert Met object
-  return obj;
+
+  // TODO: convert Met object - done?
+  let artwork = new Artwork (
+    obj.objectID,
+    obj.title,
+    obj.artistDisplayName,
+    obj.objectDate,
+    obj.primaryImageSmall
+  )
+
+  return artwork;
 }
 
 routes.get('/', async (req, res) => {

@@ -1,6 +1,8 @@
 import * as ArtworkCache from 'artworkCache.js';
 import * as SearchCache from 'searchCache.js';
 
+const fetch = require('node-fetch');
+
 /**
  * return an ArtworkObject for the given Id
  * 
