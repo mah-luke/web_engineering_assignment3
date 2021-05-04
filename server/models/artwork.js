@@ -1,4 +1,4 @@
-export class Artwork {
+class Artwork {
     constructor(artworkId, title, artist, date, image) {
         this.artworkId = artworkId;
         this.title = title;
@@ -7,3 +7,5 @@ export class Artwork {
         this.image = image;
     }
 }
+
+module.exports = Artwork;
