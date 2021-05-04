@@ -4,7 +4,7 @@
 
 'use strict';
 
-import {Artwork} from '../artwork.js';
+import {Artwork} from '../models/artwork.js';
 
 const express = require('express');
 const routes = express.Router();
