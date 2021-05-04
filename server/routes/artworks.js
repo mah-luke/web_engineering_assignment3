@@ -12,7 +12,7 @@ const path = require('path');
 const highlights = require('../resources/highlights.json');
 const Artwork = require('../models/artwork.js');
 
-const MET_BASE_URL = 'http://collectionapi.metmuseum.org/public/collection/v1';
+const MET_BASE_URL = 'https://collectionapi.metmuseum.org/public/collection/v1';
 
 async function getArtwork(id) {
   console.log(`call getArtwork(${id})`);
@@ -48,38 +48,19 @@ routes.get('/', async (req, res) => {
     // TODO: return highlights -done?
     let artworks = [];
 
-    // highlights.highlights.forEach(id => {
-    //   console.log(id);
-    //   getArtwork(id);
-    // });
-
     let highlightIds = highlights.highlights;
+    console.log(highlightIds);
 
     let actions = highlightIds.map(getArtwork);
+    console.log(actions);
 
     let results = Promise.all(actions);
-
     console.log(results);
 
     results.then(results => {
       console.log(results);
       res.send(results)
     });
-    //console.log(actions.forEach(el => console.log(el)));
-
-    // Promise.all(highlights.highlights.map(getArtwork)).then(
-
-    // )
-
-
-    // for (let highlightId of highlights.highlights) {
-    //   getArtwork(highlightId).then( result => {
-    //     console.log(`working on artwork: ${JSON.stringify(result)}`);
-    //     console.log(result);
-    //     artworks.push(result);
-    //   })
-    // }
-
 
   } else {
     // TODO: search for artworks
