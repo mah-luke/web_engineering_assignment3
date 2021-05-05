@@ -9,3 +9,4 @@ report.json
 server/orders/order-*.json
 !server/orders/order-0000.json
 *.code-workspace
+package-lock.json
