@@ -6,9 +6,8 @@
 
 const express = require('express');
 const routes = express.Router();
-const fetch = require('node-fetch');
-const fs = require('fs');
-const path = require('path');
+// const fs = require('fs');
+// const path = require('path');
 
 const highlights = require('../resources/highlights.json');
 const proxyMetApi = require('../services/proxyMetApi.js');
@@ -29,7 +28,7 @@ routes.get('/', async (req, res) => {
 
     } else {
       console.log(`no result for search '${req.query.q}'`);
-      res.send("no value returned!");
+      res.send([{"test" : "no result"}]);
     }
   }
 });

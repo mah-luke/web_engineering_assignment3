@@ -1,8 +1,4 @@
 const fetch = require('node-fetch');
-const express = require('express');
-const routes = express.Router();
-const fs = require('fs');
-const path = require('path');
 const Cache = require('node-cache');
 
 const highlights = require('../resources/highlights.json');
