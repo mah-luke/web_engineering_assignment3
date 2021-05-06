@@ -95,24 +95,27 @@ routes.get('/', async (req, res) => {
     // TODO: search for artworks
 
     let searchIds = await getSearch(req.query.q);
-    console.log('searchIds follow:');
-    console.log(searchIds);
-    console.log(searchIds.length);
 
-    searchIds = searchIds.slice(0,100);
-    console.log(searchIds.length);
-    console.log(searchIds);
-
-    let actions = searchIds.map(getArtwork);
-    console.log(actions);
-
-    let results = Promise.all(actions);
-    console.log(results);
-
-    results.then(results => {
+    if (searchIds) {
+      searchIds = searchIds.slice(0,100);
+      console.log(searchIds);
+  
+      let actions = searchIds.map(getArtwork);
+      console.log(actions);
+  
+      let results = Promise.all(actions);
       console.log(results);
-      res.send(results);
-    });
+  
+      results.then(results => {
+        console.log(results);
+        res.send(results);
+      });
+
+    }
+    else {
+      console.log(`no result for search '${req.query.q}'`);
+      res.send([]);
+    }
   }
 });
 
