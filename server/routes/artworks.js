@@ -9,11 +9,8 @@ const routes = express.Router();
 const fetch = require('node-fetch');
 const fs = require('fs');
 const path = require('path');
-const cache = require('node-cache');
-
 
 const highlights = require('../resources/highlights.json');
-const Artwork = require('../models/artwork.js');
 const proxyMetApi = require('../services/proxyMetApi.js');
 
 routes.get('/', async (req, res) => {

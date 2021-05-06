@@ -12,21 +12,14 @@ const MET_BASE_URL = 'https://collectionapi.metmuseum.org/public/collection/v1';
 
 async function getArtwork(id) {
     console.log(`call getArtwork(${id})`);
-    console.log(`fetching ${MET_BASE_URL + '/objects/' + id}`);
+    // console.log(`fetching ${MET_BASE_URL + '/objects/' + id}`);
+
     const res = await fetch(MET_BASE_URL + '/objects/' + id);
-  
-    if (!res.ok) {
-      console.log("response from met-api not ok");
-      return null;
-    }
+    if (!res.ok) return null;
+
     const obj = await res.json();
-    if (!obj || !obj.objectID) {
-      console.log("response from met-api not an object");
-      return null;
-    }
+    if (!obj || !obj.objectID) return null;
   
-    console.log("creating artwork for return");
-    // TODO: convert Met object - done?
     let artwork = new Artwork (
       obj.objectID,
       obj.title,
@@ -41,28 +34,15 @@ async function getArtwork(id) {
   
 async function getSearch(searchParam) {
     console.log(`call getSearch(${searchParam})`);
-    console.log(`fetch via ${MET_BASE_URL + '/search?q=' + searchParam}`);
-    const res = await fetch(MET_BASE_URL + '/search?q=' + searchParam);
+    // console.log(`fetch via ${MET_BASE_URL + '/search?q=' + searchParam}`);
 
-    if (!res.ok) {
-        return null;
-    }
+    const res = await fetch(MET_BASE_URL + '/search?q=' + searchParam);
+    if (!res.ok) return null;
 
     const obj = await res.json();
-    console.log(obj);
-
-    if(!obj) {
-        console.log("no obj or objID");
-        return null;
-    }
-
-    console.log(obj);
-
-    console.log('returning objectIds: ')
-    console.log(obj.objectIDs);
+    if (!obj) return null;
 
     return obj.objectIDs;
-
 }
 
 exports.getArtwork = getArtwork;
