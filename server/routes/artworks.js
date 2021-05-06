@@ -63,7 +63,12 @@ async function getSearch(searchParam) {
     return null;
   }
 
-  return res.objectIDs;
+  console.log(obj);
+
+  console.log('returning objectIds: ')
+  console.log(obj.objectIDs);
+
+  return obj.objectIDs;
 
 }
 
@@ -89,7 +94,13 @@ routes.get('/', async (req, res) => {
   } else {
     // TODO: search for artworks
 
-    let searchIds = getSearch(req.query.q);
+    let searchIds = await getSearch(req.query.q);
+    console.log('searchIds follow:');
+    console.log(searchIds);
+    console.log(searchIds.length);
+
+    searchIds = searchIds.slice(0,100);
+    console.log(searchIds.length);
     console.log(searchIds);
 
     let actions = searchIds.map(getArtwork);
@@ -101,10 +112,7 @@ routes.get('/', async (req, res) => {
     results.then(results => {
       console.log(results);
       res.send(results);
-    })
-
-
-    res.send();
+    });
   }
 });
 
