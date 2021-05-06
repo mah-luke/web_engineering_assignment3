@@ -22,13 +22,14 @@ routes.get('/', async (req, res) => {
     let searchIds = await proxyMetApi.getSearch(req.query.q);
 
     if (searchIds) {
+      console.log(`search returned ${searchIds.length} value(s)`);
   
       Promise.all(searchIds.slice(0,100).map(proxyMetApi.getArtwork))
       .then(resolved => res.send(resolved));
 
     } else {
       console.log(`no result for search '${req.query.q}'`);
-      res.send([{"test" : "no result"}]);
+      res.send([]);
     }
   }
 });

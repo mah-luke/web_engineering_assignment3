@@ -1,14 +1,13 @@
 const fetch = require('node-fetch');
 const Cache = require('node-cache');
 
-const highlights = require('../resources/highlights.json');
 const Artwork = require('../models/artwork.js');
 const artworkCache = new Cache();
 const searchCache = new Cache();
 const MET_BASE_URL = 'https://collectionapi.metmuseum.org/public/collection/v1';
 
 async function getArtwork(id) {
-    console.log(`call getArtwork(${id})`);
+    // console.log(`call getArtwork(${id})`);
 
     let artwork = artworkCache.get(id);
 
@@ -35,7 +34,7 @@ async function getArtwork(id) {
 }
   
 async function getSearch(searchParam) {
-    console.log(`call getSearch(${searchParam})`);
+    // console.log(`call getSearch(${searchParam})`);
 
     let search = searchCache.get(searchParam);
 
