@@ -41,7 +41,7 @@ async function getSearch(searchParam) {
     if (!search) {
         console.log(`retrieving search (searchParam: ${searchParam}) via API-call`);
 
-        const res = await fetch(MET_BASE_URL + '/search?q=' + searchParam + "&hasImages=true");
+        const res = await fetch(MET_BASE_URL + '/search?hasImages=true&q=' + searchParam );
         if (!res.ok) return null;
     
         const obj = await res.json();
