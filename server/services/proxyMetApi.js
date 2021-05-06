@@ -3,46 +3,61 @@ const express = require('express');
 const routes = express.Router();
 const fs = require('fs');
 const path = require('path');
-const cache = require('node-cache');
+const Cache = require('node-cache');
 
 const highlights = require('../resources/highlights.json');
 const Artwork = require('../models/artwork.js');
+const artworkCache = new Cache();
+const searchCache = new Cache();
 
 const MET_BASE_URL = 'https://collectionapi.metmuseum.org/public/collection/v1';
 
 async function getArtwork(id) {
     console.log(`call getArtwork(${id})`);
-    // console.log(`fetching ${MET_BASE_URL + '/objects/' + id}`);
 
-    const res = await fetch(MET_BASE_URL + '/objects/' + id);
-    if (!res.ok) return null;
+    let artwork = artworkCache.get(id);
 
-    const obj = await res.json();
-    if (!obj || !obj.objectID) return null;
-  
-    let artwork = new Artwork (
-      obj.objectID,
-      obj.title,
-      obj.artistDisplayName,
-      obj.objectDate,
-      obj.primaryImageSmall
-    )
-  
-    console.log(`artwork: ${JSON.stringify(artwork)}`);
+    if (!artwork) {
+        console.log(`retrieving artwork (id: '${id}') via API-call`);
+
+        const res = await fetch(MET_BASE_URL + '/objects/' + id);
+        if (!res.ok) return null;
+    
+        const obj = await res.json();
+        if (!obj || !obj.objectID) return null;
+      
+        artwork = new Artwork (
+          obj.objectID,
+          obj.title,
+          obj.artistDisplayName,
+          obj.objectDate,
+          obj.primaryImageSmall
+        );
+        artworkCache.set(id, artwork);
+    }
+
     return artwork;
 }
   
 async function getSearch(searchParam) {
     console.log(`call getSearch(${searchParam})`);
-    // console.log(`fetch via ${MET_BASE_URL + '/search?q=' + searchParam}`);
 
-    const res = await fetch(MET_BASE_URL + '/search?q=' + searchParam);
-    if (!res.ok) return null;
+    let search = searchCache.get(searchParam);
 
-    const obj = await res.json();
-    if (!obj) return null;
+    if (!search) {
+        console.log(`retrieving search (searchParam: ${searchParam}) via API-call`);
 
-    return obj.objectIDs;
+        const res = await fetch(MET_BASE_URL + '/search?q=' + searchParam);
+        if (!res.ok) return null;
+    
+        const obj = await res.json();
+        if (!obj) return null;
+
+        search = obj.objectIDs;
+        searchCache.set(searchParam, search);
+    }
+
+    return search;
 }
 
 exports.getArtwork = getArtwork;
