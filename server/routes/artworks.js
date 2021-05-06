@@ -9,6 +9,9 @@ const routes = express.Router();
 const fetch = require('node-fetch');
 const fs = require('fs');
 const path = require('path');
+const cache = require('node-cache');
+
+
 const highlights = require('../resources/highlights.json');
 const Artwork = require('../models/artwork.js');
 
@@ -43,6 +46,27 @@ async function getArtwork(id) {
   return artwork;
 }
 
+async function getSearch(searchParam) {
+  console.log(`call getSearch(${searchParam})`);
+  console.log(`fetch via ${MET_BASE_URL + '/search?q=' + searchParam}`);
+  const res = await fetch(MET_BASE_URL + '/search?q=' + searchParam);
+
+  if (!res.ok) {
+    return null;
+  }
+
+  const obj = await res.json();
+  console.log(obj);
+  
+  if(!obj) {
+    console.log("no obj or objID");
+    return null;
+  }
+
+  return res.objectIDs;
+
+}
+
 routes.get('/', async (req, res) => {
   if (req.query.q == null) {
     // TODO: return highlights -done?
@@ -64,6 +88,22 @@ routes.get('/', async (req, res) => {
 
   } else {
     // TODO: search for artworks
+
+    let searchIds = getSearch(req.query.q);
+    console.log(searchIds);
+
+    let actions = searchIds.map(getArtwork);
+    console.log(actions);
+
+    let results = Promise.all(actions);
+    console.log(results);
+
+    results.then(results => {
+      console.log(results);
+      res.send(results);
+    })
+
+
     res.send();
   }
 });
