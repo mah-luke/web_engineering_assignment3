@@ -29,7 +29,7 @@ routes.get('/', async (req, res) => {
 
     } else {
       console.log(`no result for search '${req.query.q}'`);
-      res.send([]);
+      res.send("no value returned!");
     }
   }
 });
