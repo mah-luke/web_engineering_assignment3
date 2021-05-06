@@ -6,11 +6,12 @@
 
  const express = require('express');
  const routes = express.Router();
+ const Cache = require('node-cache');
  // const fs = require('fs');
  // const path = require('path');
  
  routes.get('/', async (req, res) => {
-     //TODO: implement method
+     //TODO: implement get
      // implement send sessionID
 
      // implement return cart for sessionID
@@ -25,7 +26,7 @@
  });
  
  routes.get('/:id', async (req, res) => {
-     //TODO: implement method
+     //TODO: implement get
     // implement send specific cart item
  });
 

@@ -13,6 +13,7 @@ const highlights = require('../resources/highlights.json');
 const proxyMetApi = require('../services/proxyMetApi.js');
 
 routes.get('/', async (req, res) => {
+
   if (req.query.q == null)
     Promise.all(highlights.highlights.map(proxyMetApi.getArtwork))
     .then(resolved => res.send(resolved));
@@ -35,8 +36,9 @@ routes.get('/', async (req, res) => {
 });
 
 routes.get('/:id', async (req, res) => {
-  const artwork = await proxyMetApi.getArtwork(parseInt(req.params.id));
 
+  const artwork = await proxyMetApi.getArtwork(parseInt(req.params.id));
+  
   if (artwork) res.send(artwork);
   else res.sendStatus(404);
 });
