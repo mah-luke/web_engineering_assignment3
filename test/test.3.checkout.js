@@ -25,7 +25,9 @@ function startFetchMock(steps, chance) {
 
   fetchMock.post(`${BLING_BASE_URL}/payment_intents`, (url, opts) => {
     const authHeader = 'Basic ' + btoa(process.env.BLING_API_KEY + ':');
-    if (!opts.headers || opts.headers['Authorization'] != authHeader) { return 403; }
+    if (!opts.headers || opts.headers['Authorization'] != authHeader) {
+      return { status: 401, headers: { 'WWW-Authenticate': 'Basic realm="Bling API"' } };
+    }
     try { opts.body = JSON.parse(opts.body); } catch (e) { return 400; }
     if (!opts.body.amount || isNaN(opts.body.amount)) { return 400; }
     if (opts.body.currency != 'eur') { return 400; }
@@ -44,7 +46,9 @@ function startFetchMock(steps, chance) {
 
   fetchMock.get(`glob:${BLING_BASE_URL}/payment_intents/*`, (url, opts) => {
     const authHeader = 'Basic ' + btoa(process.env.BLING_API_KEY + ':');
-    if (!opts.headers || opts.headers['Authorization'] != authHeader) { return 403; }
+    if (!opts.headers || opts.headers['Authorization'] != authHeader) {
+      return { status: 401, headers: { 'WWW-Authenticate': 'Basic realm="Bling API"' } };
+    }
     const pid = url.substring(url.lastIndexOf('/') + 1);
     const payment_intent = blingPaymentIntents.get(pid);
     return payment_intent ? payment_intent : 404;
