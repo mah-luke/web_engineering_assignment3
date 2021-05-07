@@ -16,7 +16,7 @@ routes.get('/', async (req, res) => {
   const idList = req.query.q ? await proxyMetApi.getSearch(req.query.q) : highlights.highlights;
 
   if (!idList) res.send([]);
-  Promise.all(idList.slice(0,100).map(proxyMetApi.getArtwork))
+  else Promise.all(idList.slice(0,100).map(proxyMetApi.getArtwork))
   .then(resolved => res.send(resolved));
 });
 
