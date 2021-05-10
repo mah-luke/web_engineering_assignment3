@@ -68,7 +68,7 @@ module.exports = {
       name: this.name(),
       address: this.address(),
       city: this.city(),
-      country: this.country(),
+      country: this.pickone(['AT', 'DE', 'CH', 'UK']),
       postal_code: this.postcode()
     };
     if (this.bool()) {

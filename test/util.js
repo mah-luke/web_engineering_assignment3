@@ -103,11 +103,11 @@ export async function createRandomCart(steps, chance) {
   const sid = await createNewCart(steps);
   const n = chance.integer({ min: 1, max: 5 });
   let cart = [];
-  let amount = 0;
+  let subtotal = 0;
   for (let i = 0; i < n; i++) {
     const item = await addRandomCartItem(steps, chance, sid);
     cart.push(item);
-    amount += calculatePrice(item.printSize, item.frameStyle, item.frameWidth, item.matWidth);
+    subtotal += calculatePrice(item.printSize, item.frameStyle, item.frameWidth, item.matWidth);
   }
-  return { sid, cart, amount }
+  return { sid, cart, subtotal }
 }

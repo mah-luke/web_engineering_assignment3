@@ -95,7 +95,7 @@ function confirmBlingPaymentIntent(pid, card, success) {
 
 //----------------------------------------------------------------------------
 
-async function initiateCheckout(steps, chance, sid, amount) {
+async function initiateCheckout(steps, chance, sid) {
   steps.beginGroup('initiate checkout');
   const customerInfo = {
     email: chance.email({ domain: 'example.com' }),
@@ -132,8 +132,8 @@ async function initiateCheckout(steps, chance, sid, amount) {
   expectEquality(body, {
     payment_intent_id: payment_intent.id,
     client_secret: payment_intent.client_secret,
-    amount: amount,
-    currency: 'eur'
+    amount: payment_intent.amount,
+    currency: payment_intent.currency
   });
   steps.endGroup();
   return { payment_intent, customerInfo };
@@ -191,8 +191,8 @@ describe('/cart/checkout', () => {
 
   testApp(301, 'Create payment intent', async (steps, chance) => {
     startFetchMock(steps, chance);
-    const { sid, amount } = await createRandomCart(steps, chance);
-    await initiateCheckout(steps, chance, sid, amount);
+    const { sid } = await createRandomCart(steps, chance);
+    await initiateCheckout(steps, chance, sid);
   });
 
   testApp(302, 'Missing session for checkout', async (steps, chance) => {
@@ -249,8 +249,8 @@ describe('/cart/checkout', () => {
 
   testApp(306, 'Order receipt', async (steps, chance) => {
     startFetchMock(steps, chance);
-    const { sid, cart, amount } = await createRandomCart(steps, chance);
-    let { payment_intent, customerInfo } = await initiateCheckout(steps, chance, sid, amount);
+    const { sid, cart } = await createRandomCart(steps, chance);
+    let { payment_intent, customerInfo } = await initiateCheckout(steps, chance, sid);
 
     steps.push('inspect <code>orders</code> directory')
     const outputDir = path.join(__dirname, '../server/orders');
@@ -286,8 +286,8 @@ describe('/cart/checkout', () => {
 
   testApp(307, 'Clear cart after checkout', async (steps, chance) => {
     startFetchMock(steps, chance);
-    const { sid, amount } = await createRandomCart(steps, chance);
-    let { payment_intent } = await initiateCheckout(steps, chance, sid, amount);
+    const { sid } = await createRandomCart(steps, chance);
+    let { payment_intent } = await initiateCheckout(steps, chance, sid);
     payment_intent = await simulatePayment(steps, chance, payment_intent, true);
     const cart = await getCart(steps, sid);
     steps.push('expect cart to be empty')
@@ -296,9 +296,9 @@ describe('/cart/checkout', () => {
 
   testApp(308, 'Failed payment', async (steps, chance) => {
     startFetchMock(steps, chance);
-    const { sid, amount } = await createRandomCart(steps, chance);
+    const { sid } = await createRandomCart(steps, chance);
     const cart = await getCart(steps, sid);
-    let { payment_intent } = await initiateCheckout(steps, chance, sid, amount);
+    let { payment_intent } = await initiateCheckout(steps, chance, sid);
 
     steps.push('inspect <code>orders</code> directory')
     const outputDir = path.join(__dirname, '../server/orders');
