@@ -8,6 +8,7 @@ function getCart(sessionId, itemId) {
 
 function setCart(sessionId, cartItem) {
 
+    // TODO: write validation for CartItem
     let cartItemParsed = new CartItem(
         cartItem.cartItemId,
         cartItem.printSize,
@@ -17,13 +18,14 @@ function setCart(sessionId, cartItem) {
         cartItem.matColor,
         cartItem.matWidth
     );
+    console.log(cartItemParsed);
 
     let carts = getCarts(sessionId);
     console.log(carts);
 
     if (!Array.isArray(carts)) carts = [];
     
-    carts.append(cartItemParsed);
+    carts.push(cartItemParsed);
     cache.set(sessionId, carts);
 }
 
