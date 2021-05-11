@@ -7,8 +7,7 @@ const searchCache = new Cache();
 const MET_BASE_URL = 'https://collectionapi.metmuseum.org/public/collection/v1';
 
 async function getArtwork(id) {
-    // console.log(`call getArtwork(${id})`);
-
+    
     let artwork = artworkCache.get(id);
 
     if (!artwork) {
@@ -34,7 +33,6 @@ async function getArtwork(id) {
 }
   
 async function getSearch(searchParam) {
-    // console.log(`call getSearch(${searchParam})`);
 
     let search = searchCache.get(searchParam);
 
