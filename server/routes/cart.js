@@ -51,11 +51,11 @@
     else {
        res.cookie(COOKIE, sessionId, {path: "/cart"});
 
-       let carts = req.body;
-       cartStorage.setCarts(sessionId, carts);
-       // TODO: implement parsing to cartItem and 400 bad request if not possible
-       console.log(cartStorage.getCarts(sessionId));
-       res.sendStatus(201);
+       let cart = req.body;
+       let response = cartStorage.setCart(sessionId, cart);
+
+       if (response == 0) res.sendStatus(201);
+       else res.sendStatus(400); // TODO: implement dictionary of errors
     }
  });
 

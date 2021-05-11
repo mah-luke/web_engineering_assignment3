@@ -1,13 +1,15 @@
+const priceCalc = require('../utils/price.js');
+
 class CartItem {
-    constructor(cartItemId, price, artworkId, printSize, frameStyle, frameWidth, matColor, matWidth) {
+    constructor(cartItemId, printSize, artworkId, frameStyle, frameWidth, matColor, matWidth) {
         this.cartItemId = cartItemId;
-        this.price = price;
         this.artworkId = artworkId;
-        this.printSize = printSize;
         this.frameStyle = frameStyle;
         this.frameWidth = frameWidth;
         this.matColor = matColor;
         this.matWidth = matWidth;
+        this.printSize = printSize;
+        this.price = priceCalc.calculatePrice(this.printSize, frameStyle, frameWidth, matWidth);
     }
 }
 
