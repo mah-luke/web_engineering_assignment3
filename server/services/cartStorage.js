@@ -1,17 +1,31 @@
 const Cache = require('node-cache');
 const cache = new Cache();
+const CartItem = require('../models/cartItem');
 
 function getCart(sessionId, itemId) {
     return cache.get(sessionId)[itemId];
 }
 
 function setCart(sessionId, cartItem) {
+
+    // TODO: write validation for CartItem
+    let cartItemParsed = new CartItem(
+        cartItem.cartItemId,
+        cartItem.printSize,
+        cartItem.artworkId,
+        cartItem.frameStyle,
+        cartItem.frameWidth,
+        cartItem.matColor,
+        cartItem.matWidth
+    );
+    console.log(cartItemParsed);
+
     let carts = getCarts(sessionId);
     console.log(carts);
 
     if (!Array.isArray(carts)) carts = [];
     
-    carts.append(cartItem);
+    carts.push(cartItemParsed);
     cache.set(sessionId, carts);
 }
 
