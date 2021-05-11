@@ -6,23 +6,74 @@
 
  const express = require('express');
  const routes = express.Router();
- const Cache = require('node-cache');
+ const NanoId = require('nanoid');
+ const cartStorage = require('../services/cartStorage.js');
  // const fs = require('fs');
  // const path = require('path');
+
+ const COOKIE = 'sessionId';
+
+ cartStorage.setCarts('dummyId', [{'test':'testVal'}]);
  
  routes.get('/', async (req, res) => {
-     //TODO: implement get
-     // implement send sessionID
+
+     let sessionId = req.cookies[COOKIE];
+
+     if (!sessionId) {
+         console.log(`Creating new SessionId`);
+
+         res.cookie(COOKIE, NanoId.nanoid(), {path: "/cart"});
+         res.send([]);
+     } 
+     else {
+         console.log(`Using sessionId: ${sessionId}`);
+         
+         res.cookie(COOKIE, sessionId, {path: "/cart"});
+
+         let carts = cartStorage.getCarts(sessionId);
+         console.log(carts);
+
+         if(carts) res.send(carts);
+         else res.sendStatus(403);
+     }
+     
 
      // implement return cart for sessionID
  });
 
  routes.post('/', async (req, res) => {
     // TODO: implement post
+    console.log(`POST /cart/`);
+
+    let sessionId = req.cookies[COOKIE];
+   
+    if (!sessionId) res.sendStatus(403);
+    else {
+       res.cookie(COOKIE, sessionId, {path: "/cart"});
+
+       let carts = req.body;
+       cartStorage.setCarts(sessionId, carts);
+       // TODO: implement parsing to cartItem and 400 bad request if not possible
+       console.log(cartStorage.getCarts(sessionId));
+       res.sendStatus(201);
+    }
  });
 
  routes.delete('/', async (req, res) => {
     // TODO: implement delete
+    console.log(`DELETE /cart/`);
+
+    let sessionId = req.cookies[COOKIE];
+
+    if (!sessionId) res.sendStatus(403);
+    else {
+       res.cookie(COOKIE, sessionId, {path: "/cart"});
+
+       if (!cartStorage.getCarts)
+
+       cartStorage.setCarts(sessionId, null); // TODO: Implement deletion not only null setting
+       res.sendStatus(204);
+    }
  });
  
  routes.get('/:id', async (req, res) => {
