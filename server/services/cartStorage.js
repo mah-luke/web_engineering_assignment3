@@ -7,10 +7,15 @@ function getCart(sessionId, itemId) {
 }
 
 function setCart(sessionId, cartItem) {
+    
+    let carts = getCarts(sessionId);
+    console.log(carts);
+
+    let cartItemId = carts? carts.length : 0;
 
     // TODO: write validation for CartItem
     let cartItemParsed = new CartItem(
-        cartItem.cartItemId,
+        cartItemId,
         cartItem.printSize,
         cartItem.artworkId,
         cartItem.frameStyle,
@@ -20,13 +25,13 @@ function setCart(sessionId, cartItem) {
     );
     console.log(cartItemParsed);
 
-    let carts = getCarts(sessionId);
-    console.log(carts);
 
     if (!Array.isArray(carts)) carts = [];
     
     carts.push(cartItemParsed);
     cache.set(sessionId, carts);
+
+    return 0; // TODO: implement error codes
 }
 
 function getCarts(sessionId) {
