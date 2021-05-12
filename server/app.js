@@ -24,7 +24,6 @@ app.use(cookieParser());
 app.use(session({
   genid: (req) => {
     console.log(`method: ${req.method}, baseUrl: ${req.path}`);
-    console.log(req);
     if (req.method == 'GET' && req.path == '/cart') {
       console.log(`in GET Cart --> creating id`);
       return NanoId.nanoid();

@@ -42,7 +42,12 @@ function setCarts(sessionId, cartItems) {
     cache.set(sessionId, cartItems);
 }
 
+function getNew() {
+    return new Cache();
+}
+
 exports.getCart = getCart;
 exports.setCart = setCart;
 exports.getCarts = getCarts;
 exports.setCarts = setCarts;
+exports.getNew = getNew;

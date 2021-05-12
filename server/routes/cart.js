@@ -10,59 +10,38 @@
  const cartStorage = require('../services/cartStorage.js');
  // const fs = require('fs');
  // const path = require('path');
-
-//  const COOKIE = 'sessionId';
-
-//  cartStorage.setCarts('dummyId', [{'test':'testVal'}]);
  
  routes.get('/', async (req, res) => {
+    console.log(`GET /cart/`);
 
    // console.log(req.session);
    // console.log(`sessionId: ${req}`)
 
-   //   let sessionId = req.cookies[COOKIE];
-     let sessId = req.sessionID;
-     console.log(sessId);
+     console.log(req.sessionID);
 
      if (!req.session.carts) {
-         console.log(`Creating new SessionId`);
-
-         // res.cookie(COOKIE, NanoId.nanoid(), {path: "/cart"});
          req.session.carts = [];
-         console.log(req.session);
-         res.send(req.session.carts);
      } 
      else {
-         console.log(`Using sessionId: ${sessId}`);
-         
-      //   res.cookie(COOKIE, sessionId, {path: "/cart"});
-
-         let carts = cartStorage.getCarts(sessId);
-         console.log(carts);
-
-         if(carts) res.send(carts);
-         else res.send([]);
-     }
-     
-
-     // implement return cart for sessionID
+         console.log(`Using sessionId: ${req.sessionID}`);
+         // TODO: implement check for valid
+      }
+      res.send(req.session.carts);
  });
 
  routes.post('/', async (req, res) => {
-    // TODO: implement post
     console.log(`POST /cart/`);
-
-    let sessId = req.sessionID;
-    console.log(`sessionId: ${sessId}`);
+    console.log(`sessionId: ${req.sessionID}`);
    
-    if (!sessId) res.sendStatus(403);
+    if (!req.sessionID) res.sendStatus(403);
     else {
-      //  res.cookie(COOKIE, sessId, {path: "/cart"});
-
        let cart = req.body;
-       let response = cartStorage.setCart(sessId, cart);
 
-       if (response == 0) res.sendStatus(201);
+       // TODO: write validation
+       if (cart) {
+         req.session.carts.push(cart);
+         res.sendStatus(201); 
+      } 
        else res.sendStatus(400); // TODO: implement dictionary of errors
     }
  });
