@@ -41,7 +41,6 @@ app.use(session({
   secret: '1234',
   saveUninitialized: false,
   resave: false,
-  // store:new FileStore()
 }))
 
 // Register the modules containing the routes

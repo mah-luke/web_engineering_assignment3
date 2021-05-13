@@ -5,10 +5,8 @@
  'use strict';
 
  const express = require('express');
- const CartItem = require('../models/cartItem.js');
  const routes = express.Router();
-
- const CartStorage = require('../services/cartStorage');
+ const cartItemValidation = require('../services/cartItemValidation');
  // const fs = require('fs');
  // const path = require('path');
  
@@ -36,14 +34,15 @@
       let toValidate = req.body;
       toValidate.cartItemId = req.session.carts.length;
 
-      try {
-         let validatedCartItem = validateCartItem(toValidate);
-         req.session.carts.push(validatedCartItem);
+      let validationResult = cartItemValidation.validateCartItem(toValidate);
+
+      if(validationResult.errors) {
+         res.status(400).send(validationResult);
+      }
+      else {
+         req.session.carts.push(validationResult);
          res.sendStatus(201);
-      } catch ( e ) {
-         console.error(e);
-         res.send(e);
-      } 
+      }
     }
  });
 
@@ -74,35 +73,14 @@
     let id = parseInt(req.params.id);
 
     if (!req.sessionID) res.sendStatus(403);
+
     else if (!req.session.carts || req.session.carts.length <= id || id < 0 || req.session.carts[id] == null) 
       res.sendStatus(404);
+
     else {
        req.session.carts[parseInt(req.params.id)] = null;
        res.sendStatus(204);
     }
  });
-
- function validateCartItem(toVal) {
-    console.log(`validate item ${toVal}`);
-    console.log(toVal);
-
-   //  let errorObj = {"message" : "Validation failed"};
-
-   //  throw new Error(errorObj);
-
-   //  if (!parseInt(toVal.artworkId));
-
-    let newCartItem = new CartItem(
-      toVal.cartItemId,
-      toVal.printSize,
-      toVal.artworkId,
-      toVal.frameStyle,
-      toVal.frameWidth,
-      toVal.matColor,
-      toVal.matWidth
-   );
-
-   return newCartItem;
- }
-
+ 
  module.exports = routes;
