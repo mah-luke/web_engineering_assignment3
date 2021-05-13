@@ -15,6 +15,7 @@ const artworkRoutes = require('./routes/artworks');
 const matsRoutes = require('./routes/mats');
 const cartRoutes = require('./routes/cart');
 const framesRoutes = require('./routes/frames');
+const shippingRoutes = require('./routes/shipping');
 
 const app = express();
 app.use(express.json());
@@ -47,6 +48,7 @@ app.use('/artworks', artworkRoutes);
 app.use('/mats', matsRoutes);
 app.use('/cart', cartRoutes);
 app.use('/frames', framesRoutes);
+app.use('/shipping', shippingRoutes);
 
 app.use((req,res,next) => {
   res.sendStatus(404);

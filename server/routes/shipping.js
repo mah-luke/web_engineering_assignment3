@@ -10,7 +10,7 @@ const destinations = destinationsParse.map(x => ({ country: x.country, displayNa
 const routes = express.Router();
 
 routes.get('/', (req, res) => {
-  res.sendStatus(101);
+  res.send(destinations);
 });
 
 module.exports = routes;

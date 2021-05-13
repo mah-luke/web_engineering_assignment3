@@ -25,7 +25,7 @@ routes.get('/:style/:imageType', async (req, res) => {
         if (imageType === 'thumbImage'){
             res.sendFile(path.join(__dirname, '../resources/' + frame.image));
         } else if (imageTypeType === 'borderImage'){
-            res.sendFile(frame.border.image);
+            res.sendFile(path.join(__dirname, '../resources/' + frame.border.image));
         }
     }
 })
