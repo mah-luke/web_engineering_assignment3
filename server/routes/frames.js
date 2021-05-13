@@ -12,4 +12,23 @@ routes.get('/', async (req, res) => {
     res.send(frames);
  });
 
+routes.get('/:style/:imageType', async (req, res) => {
+    let style = req.params.style;
+    let imageType = req.params.imageType;
+    let save = null;
+    console.log(Object.keys(framesParse).length);
+    res.sendStatus(200);
+
+  /*  for (x in framesParse) {
+        if (x.id === style) {
+            save = x.id;
+        }
+    }
+    if (!save) {
+        res.sendStatus(404);
+    } else {
+
+    } */
+})
+
 module.exports = routes;
