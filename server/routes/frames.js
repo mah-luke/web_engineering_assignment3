@@ -17,6 +17,13 @@ routes.get('/:style/:imageType', async (req, res) => {
     let imageType = req.params.imageType;
     let save = null;
     console.log(Object.keys(framesParse).length);
+
+    let frame = framesParse.filter(val => val.id == style)[0];
+    if (!frame) {
+        res.sendStatus(404);
+    }
+
+    console.log();
     res.sendStatus(200);
 
   /*  for (x in framesParse) {
