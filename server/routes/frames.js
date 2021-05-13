@@ -16,26 +16,18 @@ routes.get('/:style/:imageType', async (req, res) => {
     let style = req.params.style;
     let imageType = req.params.imageType;
     let save = null;
-    console.log(Object.keys(framesParse).length);
 
     let frame = framesParse.filter(val => val.id == style)[0];
-    if (!frame) {
+
+    if(!frame || !(imageType === 'thumbImage' || imageType === 'borderImage')) {
         res.sendStatus(404);
-    }
-
-    console.log();
-    res.sendStatus(200);
-
-  /*  for (x in framesParse) {
-        if (x.id === style) {
-            save = x.id;
+    } else {  
+        if (imageType === 'thumbImage'){
+            res.sendFile(path.join(__dirname, '../resources/' + frame.image));
+        } else if (imageTypeType === 'borderImage'){
+            res.sendFile(frame.border.image);
         }
     }
-    if (!save) {
-        res.sendStatus(404);
-    } else {
-
-    } */
 })
 
 module.exports = routes;
