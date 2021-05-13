@@ -9,7 +9,6 @@ const express = require('express');
 require('express-async-errors');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
-// const FileStore = require('session-file-store')(session);
 const NanoId = require('nanoid');
 
 const artworkRoutes = require('./routes/artworks');
@@ -38,10 +37,10 @@ app.use(session({
     httpOnly: false
   },
   name:'sessionId',
-  secret: '1234',
+  secret: NanoId.nanoid(),
   saveUninitialized: false,
   resave: false,
-}))
+}));
 
 // Register the modules containing the routes
 app.use('/artworks', artworkRoutes);

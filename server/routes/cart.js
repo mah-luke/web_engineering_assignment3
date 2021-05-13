@@ -43,8 +43,8 @@
 
     if (!req.sessionID) res.sendStatus(403);
     else {
-          req.session.carts = [];
-          res.sendStatus(204);
+      req.session.carts = [];
+      res.sendStatus(204);
     }
  });
  
@@ -68,6 +68,17 @@
     else {
        req.session.carts[id] = null;
        res.sendStatus(204);
+    }
+ });
+
+ routes.post('/checkout', async (req, res) =>  {
+    console.log(`POST /cart/checkout for session: ${req.sessionID}`)
+    
+    if (!req.sessionID) res.sendStatus(403);
+    else if (!req.session.carts) res.sendStatus(400);
+    else {
+       // TODO: implement checkout logic
+
     }
  });
 
