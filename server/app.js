@@ -24,10 +24,11 @@ app.use(cookieParser());
 app.use(session({
   genid: (req) => {
     console.log(`method: ${req.method}, baseUrl: ${req.path}`);
-    if (req.method == 'GET' && req.path == '/cart') {
+    if (req.method == 'GET' && req.path == '/cart' && !req.cookies('sessionId')) {
       console.log(`in GET Cart --> creating id`);
       return NanoId.nanoid();
     }
+    else return null;
   },
   cookie: {
     path: '/cart',

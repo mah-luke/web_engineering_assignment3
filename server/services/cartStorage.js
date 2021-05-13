@@ -1,18 +1,18 @@
-const Cache = require('node-cache');
-const cache = new Cache();
 const CartItem = require('../models/cartItem');
 
-function getCart(sessionId, itemId) {
+function test() {
+    return 'test working';
+}
+
+
+function getCart(itemId) {
     return cache.get(sessionId)[itemId];
 }
 
-function setCart(sessionId, cartItem) {
-    
-    let carts = getCarts(sessionId);
-    console.log(carts);
+function setCart(cartItem) {
+    let cartItemId = storage.length;
 
-    let cartItemId = carts? carts.length : 0;
-
+    console.log(cartItem);
     // TODO: write validation for CartItem
     let cartItemParsed = new CartItem(
         cartItemId,
@@ -25,29 +25,19 @@ function setCart(sessionId, cartItem) {
     );
     console.log(cartItemParsed);
 
-
-    if (!Array.isArray(carts)) carts = [];
-    
-    carts.push(cartItemParsed);
-    cache.set(sessionId, carts);
-
+    this.storage.push(cartItemParsed);
     return 0; // TODO: implement error codes
 }
 
-function getCarts(sessionId) {
-    return cache.get(sessionId);
+function getCarts() {
+    return this.storage;
 }
 
-function setCarts(sessionId, cartItems) {
-    cache.set(sessionId, cartItems);
-}
-
-function getNew() {
-    return new Cache();
+function setCarts(cartItems) {
+    this.storage.push(cartItems);
 }
 
 exports.getCart = getCart;
 exports.setCart = setCart;
 exports.getCarts = getCarts;
 exports.setCarts = setCarts;
-exports.getNew = getNew;
