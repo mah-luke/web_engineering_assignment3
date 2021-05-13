@@ -6,83 +6,81 @@
 
  const express = require('express');
  const routes = express.Router();
- const NanoId = require('nanoid');
- const cartStorage = require('../services/cartStorage.js');
+ const cartItemValidation = require('../services/cartItemValidation');
  // const fs = require('fs');
  // const path = require('path');
-
- const COOKIE = 'sessionId';
-
- cartStorage.setCarts('dummyId', [{'test':'testVal'}]);
  
  routes.get('/', async (req, res) => {
+    console.log(`GET /cart/`);
 
-     let sessionId = req.cookies[COOKIE];
+    console.log(req.sessionID);
+    if (!req.sessionID) res.sendStatus(403);
+    else {
+       if (!req.session.carts) req.session.carts = [];
 
-     if (!sessionId) {
-         console.log(`Creating new SessionId`);
-
-         res.cookie(COOKIE, NanoId.nanoid(), {path: "/cart"});
-         res.send([]);
-     } 
-     else {
-         console.log(`Using sessionId: ${sessionId}`);
-         
-         res.cookie(COOKIE, sessionId, {path: "/cart"});
-
-         let carts = cartStorage.getCarts(sessionId);
-         console.log(carts);
-
-         if(carts) res.send(carts);
-         else res.sendStatus(403);
-     }
-     
-
-     // implement return cart for sessionID
+      console.log(req.session.carts);
+      res.send(req.session.carts.filter(val => val != null));
+    }
  });
 
  routes.post('/', async (req, res) => {
-    // TODO: implement post
     console.log(`POST /cart/`);
-
-    let sessionId = req.cookies[COOKIE];
+    console.log(`sessionId: ${req.sessionID}`);
    
-    if (!sessionId) res.sendStatus(403);
+    if (!req.sessionID) res.sendStatus(403);
     else {
-       res.cookie(COOKIE, sessionId, {path: "/cart"});
+      console.log(req.session.carts);
 
-       let cart = req.body;
-       let response = cartStorage.setCart(sessionId, cart);
+      let toValidate = req.body;
+      toValidate.cartItemId = req.session.carts.length;
 
-       if (response == 0) res.sendStatus(201);
-       else res.sendStatus(400); // TODO: implement dictionary of errors
+      let validationResult = cartItemValidation.validateCartItem(toValidate);
+
+      if(validationResult.errors) {
+         res.status(400).send(validationResult);
+      }
+      else {
+         req.session.carts.push(validationResult);
+         res.sendStatus(201);
+      }
     }
  });
 
  routes.delete('/', async (req, res) => {
-    // TODO: implement delete
-    console.log(`DELETE /cart/`);
+    console.log(`DELETE /cart`);
 
-    let sessionId = req.cookies[COOKIE];
-
-    if (!sessionId) res.sendStatus(403);
+    if (!req.sessionID) res.sendStatus(403);
     else {
-       res.cookie(COOKIE, sessionId, {path: "/cart"});
-
-       if (!cartStorage.getCarts)
-
-       cartStorage.setCarts(sessionId, null); // TODO: Implement deletion not only null setting
-       res.sendStatus(204);
+          req.session.carts = [];
+          res.sendStatus(204);
     }
  });
  
  routes.get('/:id', async (req, res) => {
-     //TODO: implement get
-    // implement send specific cart item
+    console.log(`GET /cart/:id`);
+   
+    let id = parseInt(req.params.id);
+
+    if (!req.sessionID) res.sendStatus(403);
+    else if (!req.session.carts || req.session.carts.length <= id || id < 0 || req.session.carts[id] == null) 
+      res.sendStatus(404);
+    else res.send(req.session.carts[id]);
  });
 
- routes.delete('/;id', async (req, res) => {
-    // TODO: implement delete
- });
+ routes.delete('/:id', async (req, res) => {
+    console.log(`DELETE /cart/:id`);
 
+    let id = parseInt(req.params.id);
+
+    if (!req.sessionID) res.sendStatus(403);
+
+    else if (!req.session.carts || req.session.carts.length <= id || id < 0 || req.session.carts[id] == null) 
+      res.sendStatus(404);
+
+    else {
+       req.session.carts[parseInt(req.params.id)] = null;
+       res.sendStatus(204);
+    }
+ });
+ 
  module.exports = routes;

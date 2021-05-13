@@ -13,6 +13,7 @@ const highlights = require('../resources/highlights.json');
 const proxyMetApi = require('../services/proxyMetApi.js');
 
 routes.get('/', async (req, res) => {
+  console.log(req.sessionID);
   const idList = req.query.q ? await proxyMetApi.getSearch(req.query.q) : highlights.highlights;
 
   if (!idList) res.send([]);
