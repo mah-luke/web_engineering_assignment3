@@ -7,6 +7,7 @@
  const express = require('express');
  const routes = express.Router();
  const cartItemValidation = require('../services/cartItemValidation');
+ const BlingApi = require('../services/proxyBlingApi.js');
  // const fs = require('fs');
  // const path = require('path');
  
@@ -84,8 +85,7 @@
        }
        
        let body = req.body;
-
-
+       BlingApi.postPaymentIntent(price);
     }
  });
 
