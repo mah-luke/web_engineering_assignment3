@@ -89,4 +89,10 @@
     }
  });
 
+ routes.get('/checkout/payment-update', async (req, res) => {
+   console.log(`GET /cart/checkout/payment-update for session: ${req.sessionID}`);
+
+   // TODO: implement webhook for response of Bling
+ });
+
  module.exports = routes;
