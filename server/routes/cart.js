@@ -78,6 +78,7 @@
     else if (!req.session.carts) res.sendStatus(400);
     else {
        // TODO: implement checkout logic
+       
 
     }
  });
