@@ -78,7 +78,13 @@
     else if (!req.session.carts) res.sendStatus(400);
     else {
        // TODO: implement checkout logic
+       let price = 0;
+       for (var i = 0; i<req.session.carts.length; i++){
+         price += req.session.carts[i].price;
+       }
        
+       let body = req.body;
+
 
     }
  });
