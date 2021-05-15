@@ -78,14 +78,14 @@
     if (!req.sessionID) res.sendStatus(403);
     else if (!req.session.carts) res.sendStatus(400);
     else {
-       // TODO: implement checkout logic
        let price = 0;
        for (var i = 0; i<req.session.carts.length; i++){
          price += req.session.carts[i].price;
        }
        
-       let body = req.body;
-       BlingApi.postPaymentIntent(price);
+       let bling_res = await BlingApi.postPaymentIntent(price);
+       console.log(bling_res);
+       res.send(bling_res);
     }
  });
 
