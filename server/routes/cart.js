@@ -76,16 +76,29 @@
     console.log(`POST /cart/checkout for session: ${req.sessionID}`)
     
     if (!req.sessionID) res.sendStatus(403);
-    else if (!req.session.carts) res.sendStatus(400);
+    else if (req.session.carts.length === 0) res.sendStatus(400);
     else {
        let price = 0;
        for (var i = 0; i<req.session.carts.length; i++){
          price += req.session.carts[i].price;
        }
-       
-       let bling_res = await BlingApi.postPaymentIntent(price);
-       console.log(bling_res);
-       res.send(bling_res);
+       if (Object.keys(req.body).includes('email')){
+          if(Object.keys(req.body).includes('shipping_address')){
+            const neededKeys = ['name', 'address', 'city', 'country', 'postal_code'];
+            if(neededKeys.every(key => Object.keys(req.body.shipping_address).includes(key))) {
+               let bling_res = await BlingApi.postPaymentIntent(price);
+               console.log(bling_res);
+               res.send(bling_res);
+               
+            } else {
+               res.sendStatus(400);
+            }
+          } else{
+            res.sendStatus(400);
+          }
+       } else{
+          res.sendStatus(400);
+       }
     }
  });
 
