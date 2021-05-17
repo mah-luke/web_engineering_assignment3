@@ -10,7 +10,7 @@ async function postPaymentIntent(price) {
     let data = JSON.stringify({
         amount: price,
         currency: "eur",
-        webhook: process.envWEBHOOK
+        webhook: process.env.WEBHOOK
     });
 
     const options = {
