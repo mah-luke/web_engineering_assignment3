@@ -8,6 +8,8 @@
  const routes = express.Router();
  const cartItemValidation = require('../services/cartItemValidation');
  const BlingApi = require('../services/proxyBlingApi.js');
+ const {billings} = require("../models/billings.js");
+ const order = require('../utils/order');
  // const fs = require('fs');
  // const path = require('path');
  
@@ -88,6 +90,17 @@
             if(neededKeys.every(key => Object.keys(req.body.shipping_address).includes(key))) {
                let bling_res = await BlingApi.postPaymentIntent(price);
                console.log(bling_res);
+
+               let newBilling = {
+                  email: req.email,
+                  shipping_address: req.shipping_address,
+                  order: bling_res,
+                  sessionId: req.sessionID,
+                  request: req.body,
+                  payment_state: null
+              }
+          
+               billings[bling_res.payment_intent_id] = newBilling;
                res.send(bling_res);
                
             } else {
@@ -104,8 +117,20 @@
 
  routes.get('/checkout/payment-update', async (req, res) => {
    console.log(`GET /cart/checkout/payment-update for session: ${req.sessionID}`);
+   let body = req.body;
+   let {payment_intent} = body;
+   let billing = billings[payment_intent.id];
 
-   // TODO: implement webhook for response of Bling
+   if(req.body.type !== "payment.succeeded") {
+      req.sendStatus(204);
+   }
+
+   let cart = req.session.carts;
+   let receipt = order.mapOrder(billing.request, body, cart);
+   order.writeOrder(receipt);
+   req.session.carts = [];
+   res.sendStatus(204);
+   
  });
 
  module.exports = routes;

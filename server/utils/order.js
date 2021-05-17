@@ -12,4 +12,16 @@ function writeOrder(data) {
     fs.writeFileSync(path.join(outputDir, nextFilename), JSON.stringify(data));
 }
 
-module.exports = { writeOrder }
+function mapOrder(bling, body, cart){
+    return {
+        order_date: body.created_at,
+        email: bling.email,
+        shipping_address: bling.shipping_address,
+        card: body.payment_intent.card,
+        amount: body.payment_intent.amount,
+        currency: body.payment_intent.currency,
+        cart: cart
+    }
+}
+
+module.exports = { writeOrder, mapOrder}
