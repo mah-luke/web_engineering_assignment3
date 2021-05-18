@@ -144,7 +144,7 @@
    });
    let receipt = order.mapOrder(billing.request, body, cart);
    order.writeOrder(receipt);
-   cart = [];
+   req.session.carts = [];
    res.sendStatus(204);
    
  });
