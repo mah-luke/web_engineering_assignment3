@@ -1,11 +1,8 @@
 const fetch = require('node-fetch');
-const Cache = require('node-cache')
 
 const PaymentIntent = require('../models/PaymentIntent.js');
 const BLING_BASE_URL = 'https://web-engineering.big.tuwien.ac.at/s21/bling';
 const authHeader = 'Basic ' + btoa(process.env.BLING_API_KEY + ':');
-
-const cache = new Cache();
 
 
 async function postPaymentIntent(price) {
@@ -45,14 +42,4 @@ async function postPaymentIntent(price) {
 
 }
 
-function setCache(key, val) {
-    cache.set(key, val);
-}
-
-function getCache(key) {
-    cache.get(key);
-}
-
 exports.postPaymentIntent = postPaymentIntent;
-exports.setCache = setCache;
-exports.getCache = getCache;

@@ -8,9 +8,9 @@
  const routes = express.Router();
  const cartItemValidation = require('../services/cartItemValidation');
  const BlingApi = require('../services/proxyBlingApi.js');
- const billings = require("../models/billings.js");
  const order = require('../utils/order');
  const Cache = require('node-cache');
+ const idCache = require('../services/idCache.js');
 
  const cache = new Cache();
  // const fs = require('fs');
@@ -108,7 +108,7 @@
               };
 
               cache.set(bling_res.payment_intent_id, newBilling);
-              BlingApi.setCache(bling_res.payment_intent_id, req.sessionID);
+              idCache.set(bling_res.payment_intent_id, req.sessionID);
                res.send(bling_res);
                
             } else {
@@ -139,8 +139,7 @@
       return;
    }
 
-   //let cart = billing.cart;
-   let cart = req.session.carts;
+   let cart = billing.cart;
    cart.forEach(element => {
       delete element.cartItemId
    });
