@@ -10,6 +10,9 @@
  const BlingApi = require('../services/proxyBlingApi.js');
  const billings = require("../models/billings.js");
  const order = require('../utils/order');
+ const Cache = require('node-cache');
+
+ const cache = new Cache();
  // const fs = require('fs');
  // const path = require('path');
  
@@ -78,12 +81,15 @@
     console.log(`POST /cart/checkout for session: ${req.sessionID}`)
     
     if (!req.sessionID) res.sendStatus(403);
+
     else if (req.session.carts.length === 0) res.sendStatus(400);
     else {
        let price = 0;
        for (var i = 0; i<req.session.carts.length; i++){
          price += req.session.carts[i].price;
        }
+      //  req.session.carts.foreach(val => price += val);
+
        if (Object.keys(req.body).includes('email')){
           if(Object.keys(req.body).includes('shipping_address')){
             const neededKeys = ['name', 'address', 'city', 'country', 'postal_code'];
@@ -92,15 +98,15 @@
                console.log(bling_res);
 
                let newBilling = {
-                  email: req.email,
-                  shipping_address: req.shipping_address,
+                  email: req.body.email,
+                  shipping_address: req.body.shipping_address,
                   order: bling_res,
                   sessionId: req.sessionID,
                   request: req.body,
                   payment_state: null
               };
-          
-               billings[bling_res.payment_intent_id] = newBilling;
+
+              cache.set(bling_res.payment_intent_id, newBilling);
                res.send(bling_res);
                
             } else {
@@ -119,9 +125,9 @@
    console.log(`GET /cart/checkout/payment-update for session: ${req.sessionID}`);
    let body = req.body;
    let {payment_intent} = body;
-   let billing = billings[payment_intent.id];
+   let billing = cache.get(payment_intent.id);
 
-   if(req.body.type !== "payment.succeeded") {
+   if(body.type !== "payment.succeeded") {
       req.sendStatus(204);
    }
 
