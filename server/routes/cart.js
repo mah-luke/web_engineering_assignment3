@@ -121,7 +121,7 @@
     }
  });
 
- routes.get('/checkout/payment-update', async (req, res) => {
+ routes.post('/checkout/payment-update', async (req, res) => {
    console.log(`GET /cart/checkout/payment-update for session: ${req.sessionID}`);
    let body = req.body;
    let {payment_intent} = body;
