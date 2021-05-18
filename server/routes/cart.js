@@ -8,7 +8,7 @@
  const routes = express.Router();
  const cartItemValidation = require('../services/cartItemValidation');
  const BlingApi = require('../services/proxyBlingApi.js');
- const {billings} = require("../models/billings.js");
+ const billings = require("../models/billings.js");
  const order = require('../utils/order');
  // const fs = require('fs');
  // const path = require('path');
@@ -98,7 +98,7 @@
                   sessionId: req.sessionID,
                   request: req.body,
                   payment_state: null
-              }
+              };
           
                billings[bling_res.payment_intent_id] = newBilling;
                res.send(bling_res);
