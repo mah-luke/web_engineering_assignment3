@@ -1,4 +1,11 @@
 const CartItem = require("../models/cartItem");
+const fs = require('fs');
+const path = require('path');
+
+const matColors = JSON.parse(fs.readFileSync(path.join(__dirname, '../resources/mat-colors.json')));
+const mats = matColors.map(x => ({ color: x.id, label: x.label, hex: x.color }));
+const framesParse = JSON.parse(fs.readFileSync(path.join(__dirname, '../resources/frames.json')));
+const frames = framesParse.map(x => ({ style: x.id, label: x.label, slice : x.border.slice, cost: x.cost}));
 
 function validateCartItem(toVal) {
     console.log(`validate item ${toVal}`);
@@ -21,6 +28,12 @@ function validateCartItem(toVal) {
     // check frameStyle
     if (toVal.frameStyle != undefined && toVal.frameStyle != null) {
         // TODO: check if one of the frameStyles from 'GET /frames'
+       /*let styles = frames;
+
+       if( styles.filter(val => val.id === toVal.frameStyle).length === 0 ) {
+            errs.frameStyle = "invalid";
+        }  */
+
     } else errs.frameStyle = "missing";
 
     // check frameWidth
@@ -32,6 +45,12 @@ function validateCartItem(toVal) {
     // check matColor
     if (toVal.matColor) {
         // TODO: check if one of the color names from 'GET /mats'
+       /*let colors = mats;
+
+       if( colors.filter(val => val.id === toVal.matColor).length === 0 ) {
+            errs.matColor = "invalid";
+        }  */
+
     } else if (toVal.matWidth != 0) errs.matColor = "missing";
 
 
