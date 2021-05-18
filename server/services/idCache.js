@@ -6,7 +6,7 @@ function set(key, val){
 }
 
 function get(key){
-    idCache.get(key);
+    return idCache.get(key);
 }
 
-module.exports = { set, get}
+module.exports = {set, get}
