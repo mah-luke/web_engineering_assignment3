@@ -12,9 +12,9 @@ const session = require('express-session');
 const NanoId = require('nanoid');
 
 const artworkRoutes = require('./routes/artworks');
-const matsRoutes = require('./routes/mats');
+const matsRoutes = require('./routes/mats').routes;
 const cartRoutes = require('./routes/cart');
-const framesRoutes = require('./routes/frames');
+const framesRoutes = require('./routes/frames').routes;
 const shippingRoutes = require('./routes/shipping');
 const idCache = require('./services/idCache');
 

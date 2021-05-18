@@ -30,4 +30,10 @@ routes.get('/:style/:imageType', async (req, res) => {
     }
 })
 
-module.exports = routes;
+function getFrames() {
+    return frames;
+}
+
+
+module.exports.routes = routes;
+module.exports.getFrames = getFrames;
