@@ -17,6 +17,8 @@ const cartRoutes = require('./routes/cart');
 const framesRoutes = require('./routes/frames');
 const shippingRoutes = require('./routes/shipping');
 
+const proxyBlingApi = require("./services/proxyBlingApi.js");
+
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
@@ -29,7 +31,7 @@ app.use(session({
       return NanoId.nanoid();
     }
     else if (req.method == 'POST' && req.path == '/cart/checkout/payment-update') {
-      
+      return proxyBlingApi.getCache(req.body.paymentintent.id);
     }
     else {
       console.log(`Invalid sessionId or no sessionId on enpoint other than GET /cart marking session as failed!`);

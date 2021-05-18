@@ -108,6 +108,7 @@
               };
 
               cache.set(bling_res.payment_intent_id, newBilling);
+              BlingApi.setCache(bling_res.payment_intent_id, req.sessionID);
                res.send(bling_res);
                
             } else {
@@ -138,7 +139,8 @@
       return;
    }
 
-   let cart = billing.cart;
+   //let cart = billing.cart;
+   let cart = req.session.carts;
    cart.forEach(element => {
       delete element.cartItemId
    });
