@@ -103,6 +103,7 @@
                   order: bling_res,
                   sessionId: req.sessionID,
                   request: req.body,
+                  cart: req.session.carts,
                   payment_state: null
               };
 
@@ -128,13 +129,22 @@
    let billing = cache.get(payment_intent.id);
 
    if(body.type !== "payment.succeeded") {
-      req.sendStatus(204);
+      res.sendStatus(204);
+      return;
    }
 
-   let cart = req.session.carts;
+   if(!Object.keys(body.payment_intent).includes('card')){
+      res.sendStatus(400);
+      return;
+   }
+
+   let cart = billing.cart;
+   cart.forEach(element => {
+      delete element.cartItemId
+   });
    let receipt = order.mapOrder(billing.request, body, cart);
    order.writeOrder(receipt);
-   req.session.carts = [];
+   cart = [];
    res.sendStatus(204);
    
  });

@@ -28,6 +28,9 @@ app.use(session({
       console.log(`No sessionId on GET /cart Endpoint --> creating new id`);
       return NanoId.nanoid();
     }
+    else if (req.method == 'POST' && req.path == '/cart/checkout/payment-update') {
+      
+    }
     else {
       console.log(`Invalid sessionId or no sessionId on enpoint other than GET /cart marking session as failed!`);
       return null;
