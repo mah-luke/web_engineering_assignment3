@@ -1,4 +1,14 @@
 const CartItem = require("../models/cartItem");
+const fs = require('fs');
+const path = require('path');
+
+const getFrames = require('../routes/frames').getFrames;
+const getMats = require('../routes/mats').getMats;
+
+const matColors = JSON.parse(fs.readFileSync(path.join(__dirname, '../resources/mat-colors.json')));
+const mats = matColors.map(x => ({ color: x.id, label: x.label, hex: x.color }));
+const framesParse = JSON.parse(fs.readFileSync(path.join(__dirname, '../resources/frames.json')));
+const frames = framesParse.map(x => ({ style: x.id, label: x.label, slice : x.border.slice, cost: x.cost}));
 
 function validateCartItem(toVal) {
     console.log(`validate item ${toVal}`);
@@ -21,6 +31,14 @@ function validateCartItem(toVal) {
     // check frameStyle
     if (toVal.frameStyle != undefined && toVal.frameStyle != null) {
         // TODO: check if one of the frameStyles from 'GET /frames'
+       let styles = [];
+       let frames = getFrames();
+
+       for(let val of frames) styles.push(val.style);
+
+       if( styles.filter(val => val == toVal.frameStyle).length == 0 ) {
+            errs.frameStyle = "invalid";
+        }  
     } else errs.frameStyle = "missing";
 
     // check frameWidth
@@ -32,6 +50,14 @@ function validateCartItem(toVal) {
     // check matColor
     if (toVal.matColor) {
         // TODO: check if one of the color names from 'GET /mats'
+       let colors = [];
+       let mats = getMats();
+       for(let val of mats) colors.push(val.color);
+
+       if( colors.filter(val => val == toVal.matColor).length == 0 ) {
+            errs.matColor = "invalid";
+        } 
+
     } else if (toVal.matWidth != 0) errs.matColor = "missing";
 
 
@@ -46,8 +72,7 @@ function validateCartItem(toVal) {
     if (Object.keys(errorObj.errors).length != 0) {
        console.error(`Validation not passed. Returning Errors.`);
        return errorObj;
-    } 
- 
+    }
     else {
        console.log(`Validation passed. Returning CartItem`)
        let newCartItem = new CartItem(

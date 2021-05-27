@@ -17,4 +17,9 @@ routes.get('/', (req, res) => {
   res.send(mats);
 });
 
-module.exports = routes;
+function getMats() {
+  return mats;
+}
+
+module.exports.routes = routes;
+module.exports.getMats = getMats;

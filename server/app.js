@@ -12,10 +12,11 @@ const session = require('express-session');
 const NanoId = require('nanoid');
 
 const artworkRoutes = require('./routes/artworks');
-const matsRoutes = require('./routes/mats');
+const matsRoutes = require('./routes/mats').routes;
 const cartRoutes = require('./routes/cart');
-const framesRoutes = require('./routes/frames');
+const framesRoutes = require('./routes/frames').routes;
 const shippingRoutes = require('./routes/shipping');
+const idCache = require('./services/idCache');
 
 const app = express();
 app.use(express.json());
@@ -27,6 +28,9 @@ app.use(session({
     if (req.method == 'GET' && req.path == '/cart' && !req.cookies['sessionId']) {
       console.log(`No sessionId on GET /cart Endpoint --> creating new id`);
       return NanoId.nanoid();
+    }
+    else if (req.method == 'POST' && req.path == '/cart/checkout/payment-update') {
+      return idCache.get(req.body.payment_intent.id);
     }
     else {
       console.log(`Invalid sessionId or no sessionId on enpoint other than GET /cart marking session as failed!`);
